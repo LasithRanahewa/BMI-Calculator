@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            background-color: lightblue;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: darkblue;
+        }
+
+        form {
+            width: auto;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: lightcyan;
+        }
+
+        input {
+            display: block;
+            margin: 0 auto;
+            width: auto;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            display: block;
+            margin: 0 auto;
+            width: auto;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            background: #666;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 1.2em;
+            color: darkblue;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>BMI Calculator</h1>
+    <form id="bmiForm">
+        <input type="text" id="weight" name="weight" placeholder="Weight in kilograms">
+        <input type="text" id="height" name="height" placeholder="Height in meters"><br>
+        <button type="submit" name="submit">Calculate BMI</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('bmiForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const weight = document.getElementById('weight').value;
+            const height = document.getElementById('height').value;
+
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ weight, height })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Your BMI is ${data.bmi}`;
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = 'Error calculating BMI';
+            });
+        });
+    </script>
+</body>
+
+</html>

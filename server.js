@@ -1,18 +1,24 @@
-const express = require('express')
-const bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
 
-const app = express()
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json());
+app.use(express.static('public'));
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/bmiCalculator.html')
-})
+app.post('/', (req, res) => {
+    const { weight, height } = req.body;
+    const weightNum = parseFloat(weight);
+    const heightNum = parseFloat(height);
 
-app.post('/', function (req, res) {
-    let weight = parseFloat(req.body.weight)
-    let height = parseFloat(req.body.height)
-    let bmi = weight / (height * height)
-    res.send('Your BMI is ' + bmi)
-})
+    if (isNaN(weightNum) || isNaN(heightNum) || heightNum <= 0) {
+        return res.status(400).json({ error: 'Invalid input' });
+    }
 
-app.listen(3000)
+    const bmi = weightNum / (heightNum * heightNum);
+    res.json({ bmi: bmi.toFixed(2) });
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
